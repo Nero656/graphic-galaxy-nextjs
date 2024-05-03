@@ -10,7 +10,7 @@
 
 @media (prefers-color-scheme: light) {
     :root {
-        --foreground-rgb: 255, 255, 255;
+        --foreground-rgb: 162, 185, 222;
         --background-start-rgb: 0, 0, 0;
         --background-end-rgb: 0, 0, 0;
     }
@@ -28,13 +28,80 @@
 }
 
 .main-content{
+    border-radius: 10px;
     width: 75rem;
     display: grid;
     margin: auto;
+    padding: 1em 1em 1em 1em;
     margin-top: 5rem;
     gap: 12.5px;
 }
 
+.main_authorization{
+    background-color: white;
+    border-radius: 10px;
+    width: 75rem;
+    padding: 2em 1em 1em 1em;
+}
+.main_authorization_title{
+    display: flex;
+    justify-content: center;
+    padding: .1em .1em .1em .1em;
+}
+
+.subcategory_container{
+    display: flex;
+    justify-content: start;
+}
+
+.navbar_auth{
+
+    position: fixed;
+    top: 10px;
+    right: 20px;
+}
+
+.user_dropdown{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(14, 14, 14, 0.16);
+    border-radius: 10px;
+    padding: .1em .5em .1em .5em;
+    position: fixed;
+    top: 32px;
+    right: 10px;
+}
+
+.subcategory_block{
+    margin-left: 10px;
+}
+
+.product_container{
+    background-color: white;
+    padding: 1em 1em 1em 1em;
+    border-radius: 10px;
+}
+
+.product_main{
+    display: flex;
+    flex-direction: row;
+}
+.product_naming{
+    margin-left: 20px;
+    width: 70%;
+}
+
+
+.buy_field{
+    padding: 1em 1em 1em 1em;
+    border-radius: 10px;
+    background-color: rgba(133, 133, 133, 0.1);
+    margin-top: 12px;
+    grid-area: price;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+}
 
 
 .navbarList{
@@ -49,16 +116,17 @@
 
 
 body {
+    height: 100vh;
     color: rgb(var(--foreground-rgb));
-    /*background: linear-gradient(*/
-    /*        to bottom,*/
-    /*        transparent,*/
-    /*        rgb(var(--background-end-rgb))*/
-    /*) rgb(var(--background-start-rgb));*/
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+    ) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
     .text-balance {
-        text-wrap: balance;
+        /*text-wrap: balance;*/
     }
 }

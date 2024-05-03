@@ -1,176 +1,88 @@
 "use client"
-import {useState, useEffect} from 'react'
-import {SlMenu} from "react-icons/sl";
+import {useState, useEffect, useCallback} from 'react'
+import {SlMenu} from "react-icons/sl"
+import {Button, Typography} from 'antd'
 
-import type {DrawerProps, RadioChangeEvent} from 'antd';
-import {Button, Drawer, Spin} from 'antd';
-import Subcategory from "@/app/components/navbar/subcategory/index";
+import Link from "next/link"
 
-import getRequest from "@/app/components/getRequest";
-
-type obj = {
-    attributes: {
-        Name: string
-        Is_deleted: boolean,
-        subcategories: {
-            data: [
-                {
-                    id: number
-                    attributes: { Name: string }
-                }
-            ]
-        }
-    }
-}
+const {Text} = Typography
+import Drawer from "@/app/components/navbar/drawer";
 
 export default function navbar() {
+    const [open, setOpen] = useState(false)
+    const [show, setShow] = useState(false)
 
-    const [open, setOpen] = useState(false);
-    const [openSub, setOpenSup] = useState(false);
-    const [placement, setPlacement]
-        = useState<DrawerProps['placement']>('left');
-
-    const showDrawer = () => {
-        setOpen(true);
-    };
-
-    const onClose = () => {
-        setOpen(false);
-    };
-
-    const onChange = (e: RadioChangeEvent) => {
-        setPlacement(e.target.value);
-    };
-
-
-    const onCloseSubCategory = (id: number) => {
-        setOpenSup(!openSub)
+    const showDrawer = ()=> {
+        setOpen(true)
     }
 
-    const [isLoading, setIsLoading] = useState<boolean>()
-    const [response, setResponse] = useState<[obj]>([
-        {
-            attributes: {
-                Name: "",
-                Is_deleted: false,
-                subcategories: {
-                    data: [
-                        {
-                            id: 0,
-                            attributes: {Name: ''}
-                        }
-                    ]
-                }
-            }
-        }
-    ])
+    const onClose = useCallback(() => {
+        setOpen(false)
+    }, [open]);
 
-    // const [response, setResponse] = useState<any>()
+    const onShowEnter = () => {
+        setShow(true)
+    }
+    const onShowOut = () => {
+        setShow(false)
+    }
 
-    // useEffect(() => {
-    //     try {
-    //         setIsLoading(true)
-    //         fetch(`http://localhost:1337/api/categories?populate=*`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         })
-    //             .then(response => response.json())
-    //             .then(data => setResponse(data.data))
-    //         setIsLoading(false)
-    //     } catch (error) {
-    //         alert(error)
-    //     }
-    // }, []);
-
-
-    // useEffect(() => {
-    //      const res =  getRequest(`query {
-    //               categories {
-    //                 data {
-    //                  id
-    //                 attributes{
-    //                     Name
-    //                     subcategories{
-    //                       data{
-    //                         id
-    //                         attributes{
-    //                           Name
-    //                         }
-    //                       }
-    //                     }
-    //                   }
-    //                 }
-    //               }
-    //             }`
-    //     ).then(data => data)
-    //
-    //     setResponse(res)
-    // }, []);
+    const [jwt, setJwt] = useState<string| null>('')
+    const [username, setUsername] = useState<string| null>('')
 
     useEffect(() => {
-        try {
-            setIsLoading(true)
-            fetch(`http://localhost:1337/graphql`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    query: `query {
-                          categories {
-                            data {
-                             id
-                            attributes{
-                                Name
-                                subcategories{
-                                  data{
-                                    id
-                                    attributes{
-                                      Name
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }`,
-                    variables: {}
-                })
-            })
-                .then(response => response.json())
-                .then(data => setResponse(data.data.categories.data))
-            setIsLoading(false)
-        } catch (e) {
-            console.log(e)
-        }
+        const savedJwt = window.localStorage.getItem("jwt")
+        const savedUsername = window.localStorage.getItem("username")
+
+        setJwt(savedJwt ? String(savedJwt) : null)
+        setUsername(savedUsername ? String(savedUsername) : null)
+
     }, [])
 
     return <>
         <div className={'navbar'}>
             <Button type="text" onClick={showDrawer} className={'navItem'} icon={<SlMenu/>}/>
             <a href="/" className={'navItem'}> Главная </a>
-        </div>
 
-        <Drawer
-            title="Категории"
-            placement={placement}
-            closable={false}
-            onClose={onClose}
-            open={open}
-            key={placement}
-        >
-            {isLoading ? <Spin className={'navItem'}/> :
-                isLoading === false && response.map((item, id) =>
-                    <span key={id} className={'navItem'}
-                          onClick={(e) => {
-                              onCloseSubCategory(id)
-                          }}>
-                        <Subcategory name={item.attributes.Name}
-                                     subcategories={item.attributes.subcategories}/>
-                    </span>
-                )}
-        </Drawer>
+            {jwt === null?
+                <div className={'navbar_auth'}>
+                    <Link href={'/authorization/Auth'}><Button type="text">Войти</Button></Link>
+                    <Link href={'/authorization/Registration'}><Button type="text">Зарегистрироваться</Button></Link>
+                </div> :
+                <div className={'navbar_auth'} onPointerLeave={onShowOut}>
+                    <Text
+
+                        style={{cursor: 'pointer'}}
+                        onPointerEnter={() => {
+                            onShowEnter()
+                        }}
+                    >
+                        {username}
+                    </Text>
+                    {show === true ?
+                        <div className={'user_dropdown'}
+                        >
+                            <Text
+                                  style={{cursor: 'pointer'}}
+                                  onClick={() => {}}
+                            >
+                                Корзина
+                            </Text>
+
+                            <Text type={"danger"}
+                                  style={{cursor: 'pointer'}}
+                                  onClick={() => {
+                                localStorage.clear()
+                                location.reload()
+                            }}
+                            >
+                                Выйти
+                            </Text>
+                        </div> : ''
+                    }
+                </div>
+            }
+        </div>
+        <Drawer open={open} onClose={onClose}/>
     </>
 }

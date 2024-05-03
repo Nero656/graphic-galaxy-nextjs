@@ -2,7 +2,6 @@
 import {usePathname} from 'next/navigation'
 import ProductBody from '@/app/components/content/product-list/index'
 import {useState, useEffect} from 'react'
-import Link from "next/link";
 
 type obj = {
     products: {
@@ -12,6 +11,13 @@ type obj = {
                 Name: string,
                 Description: string,
                 Price: number
+                Image: {
+                    data: {
+                        attributes: {
+                            url: string
+                        }
+                    }
+                }
             }
         }]
     }
@@ -30,6 +36,13 @@ export default function page({params}: { params: { id: number } }) {
                         Name: '',
                         Description: '',
                         Price: 0,
+                        Image: {
+                            data: {
+                                attributes: {
+                                    url: ''
+                                }
+                            }
+                        }
                     }
                 }]
             }
@@ -55,6 +68,13 @@ export default function page({params}: { params: { id: number } }) {
                                           Name
                                           Price
                                           Description
+                                          Image{
+                                            data{
+                                              attributes{
+                                                url
+                                              }
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -74,9 +94,9 @@ export default function page({params}: { params: { id: number } }) {
     }, [])
 
 
-    console.log(response)
-
     return <>
-        {response ? <Link href={''}> <ProductBody products={response.products}/> </Link> : <p>Пустота =(</p>}
+        {response ?
+                <ProductBody products={response.products}/>
+            : <p>Пустота =(</p>}
     </>
 }
