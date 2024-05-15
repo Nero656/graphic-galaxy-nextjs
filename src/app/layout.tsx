@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Navbar from '@/app/components/navbar/index'
 
+
 const inter = Inter({subsets: ["cyrillic"]});
 
 export const metadata: Metadata = {

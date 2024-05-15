@@ -1,9 +1,16 @@
 "use client"
 import {usePathname} from 'next/navigation'
 import {useState, useEffect} from 'react'
-import {Image, Tabs, Button} from "antd";
-import CharacteristicsCpu from "@/app/components/content/product-list/Characteristic/CharacteristicsCpu";
-import CharacteristicsGpu from "@/app/components/content/product-list/Characteristic/CharacteristicsGpu";
+import {Image, Empty, Tabs, Button} from "antd"
+import CharacteristicsCpu from "@/app/components/content/product-list/Characteristic/CharacteristicsCpu"
+import CharacteristicsGpu from "@/app/components/content/product-list/Characteristic/CharacteristicsGpu"
+import CharacteristicsRam from "@/app/components/content/product-list/Characteristic/CharacteristicsRam"
+import CharacteristicMotherboard from "@/app/components/content/product-list/Characteristic/CharacteristicsMotherboard"
+import CharacteristicCoolingCpu from "@/app/components/content/product-list/Characteristic/characteristicsCoolingCpu"
+import CharacteristicsSsd from "@/app/components/content/product-list/Characteristic/characteristicsSsd"
+import CharacteristicsPowerUnit from "@/app/components/content/product-list/Characteristic/CharacteristicsPowerUnit"
+import СharacteristicsHardDrive from "@/app/components/content/product-list/Characteristic/characteristicsHardDrive"
+import СharacteristicsComputerCase from "@/app/components/content/product-list/Characteristic/characteristicsComputerCase"
 
 type obj = {
     product: {
@@ -59,10 +66,9 @@ export default function page({params}: { params: { id: number } }) {
         }
     )
 
-
     useEffect(() => {
         try {
-            fetch(`http://localhost:1337/graphql`, {
+            fetch(`http://192.168.1.90:1337/graphql`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,31 +107,13 @@ export default function page({params}: { params: { id: number } }) {
         }
     }, [])
 
-    // enum Characteristics {
-    //     Characteristics_cpu = <CharacteristicsCpu id={response?.product.data.attributes.characteristic_id}/>,
-    //     Characteristics_gpu = <CharacteristicsGpu id={response?.product.data.attributes.characteristic_id}/>,
-    // }
-
-    // Characteristics_cooling_cpu,
-    //     Characteristics_hard_drive,
-    //     Characteristics_motherboard,
-    //     Characteristics_power_unit,
-    //     Characteristics_ram,
-    //     Characteristics_ssd,
-    //     Characteristics_computer_case,  <CharacteristicsCpu id={response?.product.data.id}/>
-
-
-    // console.log(Characteristics)
-
-    // const position = Object.values(Characteristics)
-
     const resData = response?.product.data
 
     const tabs = [
         {
             label: 'Описание',
             key: '1',
-            children: <span>
+            children: <span className={'product_text'}>
                 <h1>
                     <strong style={{fontSize: '1.5em'}}>Описание</strong>
                 </h1>
@@ -135,11 +123,32 @@ export default function page({params}: { params: { id: number } }) {
         {
             label: 'Характеристики',
             key: '2',
-            children: <div> {resData.attributes.category_type_id === 0 &&
+            children: <div className={'product_text'}> {resData.attributes.category_type_id === 0 &&
                 <CharacteristicsCpu id={resData.attributes.characteristic_id}/>
             }
             {resData.attributes.category_type_id === 1 &&
                 <CharacteristicsGpu id={resData.attributes.characteristic_id}/>
+            }
+            {resData.attributes.category_type_id === 2 &&
+                <CharacteristicsRam id={resData.attributes.characteristic_id}/>
+            }
+            {resData.attributes.category_type_id === 3 &&
+                <CharacteristicMotherboard id={resData.attributes.characteristic_id}/>
+            }
+            {resData.attributes.category_type_id === 4 &&
+                <CharacteristicCoolingCpu id={resData.attributes.characteristic_id}/>
+            }
+            {resData.attributes.category_type_id === 5 &&
+                <CharacteristicsSsd id={resData.attributes.characteristic_id}/>
+            }
+            {resData.attributes.category_type_id === 6 &&
+                <CharacteristicsPowerUnit id={resData.attributes.characteristic_id}/>
+            }
+            {resData.attributes.category_type_id === 7 &&
+                <СharacteristicsHardDrive id={resData.attributes.characteristic_id}/>
+            }
+            {resData.attributes.category_type_id === 8 &&
+                <СharacteristicsComputerCase id={resData.attributes.characteristic_id}/>
             }
             </div>,
             disabled: false,
@@ -147,14 +156,14 @@ export default function page({params}: { params: { id: number } }) {
     ]
 
     return <>
-        {response ? <div className={'product_container'}>
+        {response !== null ? <div className={'product_container'}>
                 <span className={'product_main'}>
                     {resData.attributes.Image.data !== null ?
                         <Image
                             width={200}
                             height={200}
                             className={'img'}
-                            src={`http://localhost:1337` + resData.attributes.Image.data.attributes.url}/> :
+                            src={`http://192.168.1.90:1337` + resData.attributes.Image.data.attributes.url}/> :
                         <Image
                             width={200}
                             height={200}
@@ -172,10 +181,11 @@ export default function page({params}: { params: { id: number } }) {
                     </span>
                 </span>
             <Tabs
+                className={'product_text'}
                 defaultActiveKey="1"
                 items={tabs}
             />
 
-        </div> : <p>Пустота =(</p>}
+        </div> : <Empty/>}
     </>
 }

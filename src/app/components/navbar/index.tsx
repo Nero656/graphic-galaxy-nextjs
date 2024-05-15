@@ -5,7 +5,7 @@ import {Button, Typography} from 'antd'
 
 import Link from "next/link"
 
-const {Text} = Typography
+const {Title } = Typography
 import Drawer from "@/app/components/navbar/drawer";
 
 export default function navbar() {
@@ -42,7 +42,7 @@ export default function navbar() {
     return <>
         <div className={'navbar'}>
             <Button type="text" onClick={showDrawer} className={'navItem'} icon={<SlMenu/>}/>
-            <a href="/" className={'navItem'}> Главная </a>
+            <Link href="/" className={'navItem'}> Главная </Link>
 
             {jwt === null?
                 <div className={'navbar_auth'}>
@@ -50,26 +50,24 @@ export default function navbar() {
                     <Link href={'/authorization/Registration'}><Button type="text">Зарегистрироваться</Button></Link>
                 </div> :
                 <div className={'navbar_auth'} onPointerLeave={onShowOut}>
-                    <Text
-
+                    <span
                         style={{cursor: 'pointer'}}
                         onPointerEnter={() => {
                             onShowEnter()
                         }}
                     >
                         {username}
-                    </Text>
+                    </span>
                     {show === true ?
-                        <div className={'user_dropdown'}
-                        >
-                            <Text
+                        <div className={'user_dropdown'}>
+                            <span
                                   style={{cursor: 'pointer'}}
                                   onClick={() => {}}
                             >
                                 Корзина
-                            </Text>
+                            </span>
 
-                            <Text type={"danger"}
+                            <Title level={5}  type={"danger"}
                                   style={{cursor: 'pointer'}}
                                   onClick={() => {
                                 localStorage.clear()
@@ -77,7 +75,7 @@ export default function navbar() {
                             }}
                             >
                                 Выйти
-                            </Text>
+                            </Title>
                         </div> : ''
                     }
                 </div>
