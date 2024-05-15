@@ -3,6 +3,7 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 
 import Navbar from '@/app/components/navbar/index'
+import {ReduxProvider} from "@/redux/provider";
 
 
 const inter = Inter({subsets: ["cyrillic"]});
@@ -17,10 +18,12 @@ export default function RootLayout({children,}:
     return (
         <html lang="ru">
             <body className={inter.className}>
-                <Navbar/>
-                <div className={'main-content'}>
-                    {children}
-                </div>
+                <ReduxProvider>
+                    <Navbar/>
+                    <div className={'main-content'}>
+                        {children}
+                    </div>
+                </ReduxProvider>
             </body>
         </html>
     );

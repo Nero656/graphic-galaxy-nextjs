@@ -5,6 +5,7 @@ import {Drawer, Spin} from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import type { DrawerClassNames, DrawerStyles } from 'antd/es/drawer/DrawerPanel';
 import Subcategory from "@/app/components/navbar/subcategory";
+import {store} from '@/redux/store'
 
 // const useStyle = createStyles(({ token }) => ({
 //     'my-drawer-body': {
@@ -93,11 +94,10 @@ export default function drawer({open, onClose}: drawerProps){
         },
     };
 
-
     useEffect(() => {
         try {
             setIsLoading(true)
-            fetch(`http://localhost:1337/graphql`, {
+            fetch(`${store.getState().api.value.url}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

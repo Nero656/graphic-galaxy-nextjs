@@ -3,6 +3,7 @@ import Item from '@/app/components/content/product-list/item'
 import {Empty} from 'antd'
 
 import Link from "next/link";
+import {store} from "@/redux/store";
 
 interface SubcategoryProps {
     products: {
@@ -25,17 +26,12 @@ interface SubcategoryProps {
 }
 
 export default function contentProductBody({products}: SubcategoryProps) {
-
-    const count = products.data.length
-
-    console.log(products.data.length)
-
     return <div className={'main-content'}>
-        {count > 0 ? products.data.map((item, id) =>
+        {products.data.length > 0 ? products.data.map((item, id) =>
                 <Link href={`/product-list/product/${item?.id}`}>
                     {item.attributes.Image.data !== null ?
                         <Item
-                            url={`http://localhost:1337` + item.attributes.Image.data.attributes.url}
+                            url={`${store.getState().api.value.imageUrl}` + item.attributes.Image.data.attributes.url}
                             title={item.attributes.Name}
                             description={item.attributes.Description}
                             price={item.attributes.Price}

@@ -1,6 +1,7 @@
 'use client'
 import React, {useState} from 'react';
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import {store} from "@/redux/store";
 
 const { Title } = Typography;
 
@@ -27,7 +28,7 @@ const userInput = () => {
 
 const authPost = async (email : string, password: string) => {
     try {
-        const resData = await fetch(`http://localhost:1337/graphql`, {
+        const resData = await fetch(`${store.getState().api.value.url}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
