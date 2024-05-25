@@ -1,7 +1,8 @@
 'use client'
 import React, {useState} from 'react';
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
-import {store} from "@/redux/store";
+import { store } from "@/redux/store";
+import { logIn } from '@/redux/features/auth-slice'
 
 const { Title } = Typography;
 
@@ -26,47 +27,47 @@ const userInput = () => {
     }
 }
 
-const authPost = async (email : string, password: string) => {
-    try {
-        const resData = await fetch(`${store.getState().api.value.url}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                query: `mutation {
-                          login(input: { identifier: "${email}", password: "${password}" }) {
-                            jwt
-                            user{
-                              username
-                              email
-                            }
-                          }
-                        }`,
-                variables: {}
-            })
-        })
-            .then(response => response.json())
-            .then(data => data.data.login)
 
-        console.log(resData, 'nero@gmail.com', 'Nerooo')
-
-        localStorage.setItem('jwt', resData.jwt)
-        localStorage.setItem('username', resData.user.username)
-        localStorage.setItem('email', resData.user.email)
-        location.replace('/')
-    }catch (e){
-        console.log(e)
-    }
-
-
-}
 
 export default function auth() {
     const [form] = Form.useForm();
 
     let email = userInput()
     let password = userInput()
+
+    // const dispatch = useDispatch<AppDispatch>()
+
+    const authPost = async (email : string, password: string) => {
+        try {
+            const resData = await fetch(`${store.getState().api.value.url}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: `mutation {
+                          login(input: { identifier: "${email}", password: "${password}" }) {
+                            jwt
+                            user{
+                              id
+                              username
+                              email
+                            }
+                          }
+                        }`,
+                    variables: {}
+                })
+            })
+                .then(response => response.json())
+                .then(data => data.data.login)
+
+            store.dispatch(logIn(resData))
+            location.replace('/')
+        }catch (e){
+            console.log(e)
+        }
+    }
+
 
     return <div className={'main_authorization'}>
         <Form layout="vertical">

@@ -2,6 +2,7 @@
 import {usePathname} from 'next/navigation'
 import ProductBody from '@/app/components/content/product-list/index'
 import {useState, useEffect} from 'react'
+import {store} from "@/redux/store";
 
 type obj = {
     products: {
@@ -51,7 +52,7 @@ export default function page({params}: { params: { id: number } }) {
 
     useEffect(() => {
         try {
-            fetch(`http://localhost:1337/graphql`, {
+            fetch(`${store.getState().api.value.url}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,9 +95,9 @@ export default function page({params}: { params: { id: number } }) {
     }, [])
 
 
-    return <>
+    return <div className={'main-content'}>
         {response ?
                 <ProductBody products={response.products}/>
             : <p>Пустота =(</p>}
-    </>
+    </div>
 }

@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
-import {Empty} from 'antd';
+import {Button, Empty} from 'antd';
+import {store} from "@/redux/store";
+import {addNewSDD} from "@/redux/features/BuilderSlices/builderSSD-slice";
 
 type obj = {
     characteristicsSsd: {
@@ -16,9 +18,10 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
-
-export default function characteristicsSsd({id}: SubcategoryProps){
+export default function characteristicsSsd({id, imgUrl, price}: SubcategoryProps){
     const [response, setResponse] = useState<obj>({
         characteristicsSsd: {
             data: {
@@ -68,6 +71,15 @@ export default function characteristicsSsd({id}: SubcategoryProps){
     return <div>
         {resData !== null ?
             <span>
+                <Button type={'primary'} onClick={
+                    (e) => {
+                        store.dispatch(addNewSDD({
+                            name: resData.attributes.name,
+                            img: imgUrl,
+                            price: price
+                        }))
+                    }
+                }>Добавить в сборку</Button>
             <p>Модель: {resData.attributes.name}</p>
             <p>Объем: {resData.attributes.Memory_size} гб</p>
             <p>M2: {resData.attributes.m2 ? 'Есть': 'Нету'}</p>

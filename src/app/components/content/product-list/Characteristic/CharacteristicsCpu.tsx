@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
-import { Empty } from 'antd';
+import {Button, Empty} from 'antd';
+import {store} from "@/redux/store";
+import {addNewCPU} from "@/redux/features/BuilderSlices/builderCPU-slice";
 
 type obj = {
     characteristicsCpu: {
@@ -25,9 +27,11 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
 
-export default function CharacteristicsCpu({id}: SubcategoryProps) {
+export default function CharacteristicsCpu({id, imgUrl, price}: SubcategoryProps) {
 
     const [response, setResponse] = useState<obj>({
         characteristicsCpu: {
@@ -97,6 +101,14 @@ export default function CharacteristicsCpu({id}: SubcategoryProps) {
     return <div>
         {resData !== null ?
             <span>
+                <Button type={'primary'} onClick={() => {
+                    store.dispatch(addNewCPU({
+                        name: resData.attributes.Core_name,
+                        socket: resData.attributes.Socket,
+                        ram: resData.attributes.Memory_type,
+                        img: imgUrl,
+                        price: price
+                    }))}}>Добавить в сборку</Button>
                 <p>Модель: {resData.attributes.Core_name}</p>
                 <p>Сокет: {resData.attributes.Socket}</p>
                 <p>Количество производительных ядер: {resData.attributes.Number_of_productive_cores}</p>

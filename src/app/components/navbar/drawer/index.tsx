@@ -1,24 +1,10 @@
 'use client'
 import React, {useEffect, useState} from 'react';
-import type { DrawerProps, RadioChangeEvent } from 'antd';
+import type { DrawerProps } from 'antd';
 import {Drawer, Spin} from 'antd';
-import { createStyles, useTheme } from 'antd-style';
-import type { DrawerClassNames, DrawerStyles } from 'antd/es/drawer/DrawerPanel';
 import Subcategory from "@/app/components/navbar/subcategory";
 import {store} from '@/redux/store'
-
-// const useStyle = createStyles(({ token }) => ({
-//     'my-drawer-body': {
-//         backgroundColor: `rgba(255, 0, 0, 0.06)`,
-//     },
-//     'my-drawer-mask': {
-//         boxShadow: `inset 0 0 15px #fff`,
-//     },
-//     'my-drawer-header': {
-//         background: 'rgba(255,255,255,0.06)',
-//     },
-// }));
-
+import {LoadingOutlined} from "@ant-design/icons";
 
 type obj = {
     attributes: {
@@ -48,9 +34,6 @@ export default function drawer({open, onClose}: drawerProps){
         setOpenSup(!openSub)
     }
 
-    const token = useTheme();
-    // const { styles } = useStyle()
-
     const [isLoading, setIsLoading] = useState<boolean>()
 
     const [response, setResponse] = useState<[obj]>([
@@ -69,30 +52,6 @@ export default function drawer({open, onClose}: drawerProps){
             }
         }
     ])
-
-    const classNames: DrawerClassNames = {
-        // body: styles['my-drawer-body'],
-        // mask: styles['my-drawer-mask'],
-        // header: styles['my-drawer-header'],
-    };
-
-    const drawerStyles: DrawerStyles = {
-        mask: {
-            backdropFilter: 'blur(10px)',
-        },
-        content: {
-            boxShadow: '-10px 0 10px #666',
-        },
-        header: {
-            borderBottom: `1px solid ${token.colorPrimary}`,
-        },
-        body: {
-            fontSize: token.fontSizeLG,
-        },
-        footer: {
-            borderTop: `1px solid ${token.colorBorder}`,
-        },
-    };
 
     useEffect(() => {
         try {
@@ -140,9 +99,8 @@ export default function drawer({open, onClose}: drawerProps){
         onClose={onClose}
         open={open}
         key={placement}
-        classNames={classNames}
     >
-        {isLoading ? <Spin className={'navItem'}/> :
+        {isLoading ? <Spin className={'flex justify-center'} indicator={<LoadingOutlined/>} /> :
             isLoading === false && response.map((item, id) =>
                 <span key={id} className={'navItem'}
                       onClick={(e) => {

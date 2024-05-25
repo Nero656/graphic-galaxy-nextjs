@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
-import { Empty } from 'antd';
+import {Button, Empty} from 'antd';
+import {store} from "@/redux/store";
+import {addNewGPU} from "@/redux/features/BuilderSlices/builderGPU-slice";
 
 type obj = {
     characteristicsGpu: {
@@ -21,9 +23,11 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
 
-export default function CharacteristicsGpu({id}: SubcategoryProps) {
+export default function CharacteristicsGpu({id, imgUrl, price}: SubcategoryProps) {
 
     const [response, setResponse] = useState<obj>({
         characteristicsGpu: {
@@ -84,6 +88,15 @@ export default function CharacteristicsGpu({id}: SubcategoryProps) {
     return <div>
         {resData !== null ?
             <span>
+                <Button type={'primary'} onClick={
+                    (e) => {
+                        store.dispatch(addNewGPU({
+                            name: resData.attributes.Gpu_name,
+                            img: imgUrl,
+                            price: price
+                        }))
+                    }
+                }>Добавить в сборку</Button>
                 <p>Модель: {resData.attributes.Gpu_name}</p>
                 <p>RTX ядра: {resData.attributes.rtx ? 'ЕСТЬ' : 'НЕТ'}</p>
                 <p>Шина памяти: {resData.attributes.Memory_buses}бит</p>

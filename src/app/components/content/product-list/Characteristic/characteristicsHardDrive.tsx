@@ -1,5 +1,7 @@
-import {useEffect, useState} from "react";
-import {Empty} from 'antd';
+import {useEffect, useState} from "react"
+import {Button, Empty} from 'antd'
+import {store} from "@/redux/store"
+import {addNewHDD} from "@/redux/features/BuilderSlices/builderHDD-slice"
 
 type obj = {
     characteristicsHardDrive: {
@@ -17,9 +19,11 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
 
-export default function characteristicsHardDrive({id}: SubcategoryProps){
+export default function characteristicsHardDrive({id, imgUrl, price}: SubcategoryProps){
     const [response, setResponse] = useState<obj>({
         characteristicsHardDrive: {
             data: {
@@ -36,7 +40,7 @@ export default function characteristicsHardDrive({id}: SubcategoryProps){
 
     useEffect(() => {
         try {
-            fetch(`http://localhost:1337/graphql`, {
+            fetch(`${store.getState().api.value.url}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -71,6 +75,15 @@ export default function characteristicsHardDrive({id}: SubcategoryProps){
     return <div>
         {resData !== null ?
             <span>
+             <Button type={'primary'} onClick={
+                 (e) => {
+                     store.dispatch(addNewHDD({
+                         name: resData.attributes.Hard_drive_name,
+                         img: imgUrl,
+                         price: price
+                     }))
+                 }
+             }>Добавить в сборку</Button>
             <p>Модель: {resData.attributes.Hard_drive_name}</p>
             <p>Объем кеша: {resData.attributes.size_of_cache}</p>
             <p>Объем {resData.attributes.size}гб</p>

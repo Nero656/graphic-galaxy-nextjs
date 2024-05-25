@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
-import {Empty} from 'antd';
+import {Button, Empty} from 'antd';
+import {store} from "@/redux/store";
+import {addNewRAM} from "@/redux/features/BuilderSlices/builderRAM-slice";
 
 type obj = {
     characteristicsRam: {
@@ -19,9 +21,11 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
 
-export default function CharacteristicsRam({id}: SubcategoryProps) {
+export default function CharacteristicsRam({id, imgUrl, price}: SubcategoryProps) {
 
     const [response, setResponse] = useState<obj>({
         characteristicsRam: {
@@ -48,7 +52,7 @@ export default function CharacteristicsRam({id}: SubcategoryProps) {
                 },
                 body: JSON.stringify({
                     query: `query{
-                      characteristicsRam(id: 1){
+                      characteristicsRam(id: ${id}){
                         data{
                           attributes{
                             ram_name
@@ -78,6 +82,16 @@ export default function CharacteristicsRam({id}: SubcategoryProps) {
     return <div>
         {resData !== null?
             <span>
+                <Button type={'primary'} onClick={
+                    (e) => {
+                        store.dispatch(addNewRAM({
+                            name: resData?.attributes.ram_name,
+                            ram: resData?.attributes.ram_type,
+                            img: imgUrl,
+                            price: price,
+                        }))
+                    }
+                }>Добавить в сборку</Button>
             <p>Модель: {resData.attributes.ram_name}</p>
             <p>Тип памяти: {resData.attributes.ram_type}</p>
             <p>Объём памяти: {resData.attributes.Memory_size}гб</p>

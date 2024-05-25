@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
-import {Empty} from 'antd';
+import {Button, Empty} from 'antd';
+import {store} from "@/redux/store";
+import {addPowerUnit} from "@/redux/features/BuilderSlices/builderPowerUnit-slice";
 
 type obj = {
     characteristicsPowerUnit: {
@@ -16,9 +18,11 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
 
-export default function characteristicsPowerUnit({id}: SubcategoryProps){
+export default function characteristicsPowerUnit({id, imgUrl, price}: SubcategoryProps){
     const [response, setResponse] = useState<obj>({
         characteristicsPowerUnit: {
             data: {
@@ -68,6 +72,15 @@ export default function characteristicsPowerUnit({id}: SubcategoryProps){
     return <div>
         {resData !== null ?
             <span>
+                <Button type={'primary'} onClick={
+                    (e) => {
+                        store.dispatch(addPowerUnit({
+                            name: resData.attributes.Name,
+                            img: imgUrl,
+                            price: price
+                        }))
+                    }
+                }>Добавить в сборку</Button>
                 <p>Модель: {resData.attributes.Name}</p>
                 <p>Форм-фактор: {resData.attributes.Form_factor}</p>
                 <p>Мощность: {resData.attributes.Power}w</p>

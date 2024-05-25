@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
-import {Empty} from 'antd';
+import {Button, Empty} from 'antd';
+import {store} from "@/redux/store";
+import {addNewMatherBoard} from "@/redux/features/BuilderSlices/builderMotherboard-slice";
 
 type obj = {
     characteristicsMotherboard: {
@@ -22,9 +24,11 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
 
-export default function CharacteristicsMotherboard({id}: SubcategoryProps) {
+export default function CharacteristicsMotherboard({id, imgUrl, price}: SubcategoryProps) {
 
     const [response, setResponse] = useState<obj>({
         characteristicsMotherboard: {
@@ -87,6 +91,18 @@ export default function CharacteristicsMotherboard({id}: SubcategoryProps) {
     return <div>
         {resData !== null ?
             <span>
+                <Button type={'primary'} onClick={
+                    (e) => {
+                        store.dispatch(addNewMatherBoard({
+                            name: resData.attributes.Matherboard_name,
+                            socket: resData?.attributes.Socket,
+                            chipset: resData?.attributes.Chipset,
+                            ram: resData?.attributes.Memory_type,
+                            img: imgUrl,
+                            price: price
+                        }))
+                    }
+                }>Добавить в сборку</Button>
             <p>Модель: {resData.attributes.Matherboard_name}</p>
             <p>Тип памяти: {resData.attributes.Memory_type}</p>
             <p>Сокет: {resData.attributes.Socket}</p>

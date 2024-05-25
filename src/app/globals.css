@@ -11,8 +11,8 @@
 @media (prefers-color-scheme: light) {
     :root {
         --foreground-rgb: 162, 185, 222;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
+        --background-start-rgb: 214, 219, 220;
+        --background-end-rgb: 255, 255, 255;
     }
 }
 
@@ -27,20 +27,27 @@
     z-index: 1000;
 }
 
+.main{
+    padding-top: 10em;
+}
+
 .main-content{
     border-radius: 10px;
-    width: 75rem;
+    width: 50vw;
     display: grid;
     margin: auto;
     padding: 1em 1em 1em 1em;
-    margin-top: 5rem;
+    margin-top: 2.5rem;
     gap: 12.5px;
+    margin-bottom: 2rem;
 }
 
 .main_authorization{
+    margin: auto;
+    margin-top: 10rem;
     background-color: white;
     border-radius: 10px;
-    width: 75rem;
+    width: 50vw;
     padding: 2em 1em 1em 1em;
 }
 .main_authorization_title{
@@ -55,18 +62,9 @@
 }
 
 .navbar_auth{
-    position: fixed;
-    top: 15px;
+    position: absolute;
+    top: 11.5px;
     right: 150px;
-}
-
-.user_dropdown{
-    background-color: white;
-    border-radius: 10px;
-    padding: .1em .5em .1em .5em;
-    position: fixed;
-    top: 37px;
-    right: 135px;
 }
 
 .subcategory_block{
@@ -88,6 +86,16 @@
     width: 70%;
 }
 
+
+.order-list{
+    display: flex;
+    justify-content: start;
+}
+
+.empty-el{
+    border-radius: 10px;
+    margin: auto;
+}
 
 .buy_field{
     padding: 1em 1em 1em 1em;
@@ -113,17 +121,18 @@
 
 
 body {
-    height: 100vh;
-    color: rgb(var(--foreground-rgb));
+    min-height: 100vh;
+    /*color: rgb(var(--foreground-rgb));*/
     background: linear-gradient(
             to bottom,
             transparent,
             rgb(var(--background-end-rgb))
     ) rgb(var(--background-start-rgb));
+    background-size: cover;
 }
 
 @layer utilities {
     .text-balance {
-        /*text-wrap: balance;*/
+        text-wrap: balance;
     }
 }

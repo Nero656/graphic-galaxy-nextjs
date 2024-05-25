@@ -1,5 +1,8 @@
 import {useEffect, useState} from "react";
-import {Empty} from 'antd';
+import {Button, Empty} from 'antd';
+import {store} from "@/redux/store";
+import {addNewMatherBoard} from "@/redux/features/BuilderSlices/builderMotherboard-slice";
+import {addNewCooling} from "@/redux/features/BuilderSlices/builderCooling-slice";
 
 type obj = {
     characteristicsCoolingCpu: {
@@ -16,9 +19,10 @@ type obj = {
 
 interface SubcategoryProps {
     id: number
+    imgUrl: string
+    price: number
 }
-
-export default function characteristicsCoolingCpu({id}: SubcategoryProps) {
+export default function characteristicsCoolingCpu({id, imgUrl, price}: SubcategoryProps) {
 
     const [response, setResponse] = useState<obj>({
         characteristicsCoolingCpu: {
@@ -69,6 +73,16 @@ export default function characteristicsCoolingCpu({id}: SubcategoryProps) {
     return <div>
         {resData !== null ?
             <span>
+                <Button type={'primary'} onClick={
+                    (e) => {
+                        store.dispatch(addNewCooling({
+                            name: resData.attributes.cooling_name,
+                            tdp: resData?.attributes.tdp,
+                            img: imgUrl,
+                            price: price
+                        }))
+                    }
+                }>Добавить в сборку</Button>
                 <p>Модель: {resData.attributes.cooling_name}</p>
                 <p>tdp: {resData.attributes.tdp}</p>
                 <p>Сокет: {resData.attributes.Soket}</p>

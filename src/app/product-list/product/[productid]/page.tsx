@@ -1,6 +1,6 @@
 "use client"
 import {usePathname} from 'next/navigation'
-import {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Image, Empty, Tabs, Button} from "antd"
 import CharacteristicsCpu from "@/app/components/content/product-list/Characteristic/CharacteristicsCpu"
 import CharacteristicsGpu from "@/app/components/content/product-list/Characteristic/CharacteristicsGpu"
@@ -10,7 +10,10 @@ import CharacteristicCoolingCpu from "@/app/components/content/product-list/Char
 import CharacteristicsSsd from "@/app/components/content/product-list/Characteristic/characteristicsSsd"
 import CharacteristicsPowerUnit from "@/app/components/content/product-list/Characteristic/CharacteristicsPowerUnit"
 import СharacteristicsHardDrive from "@/app/components/content/product-list/Characteristic/characteristicsHardDrive"
-import СharacteristicsComputerCase from "@/app/components/content/product-list/Characteristic/characteristicsComputerCase"
+import СharacteristicsComputerCase
+    from "@/app/components/content/product-list/Characteristic/characteristicsComputerCase"
+import {store} from "@/redux/store"
+import {addProduct} from "@/redux/features/order-slice"
 
 type obj = {
     product: {
@@ -124,38 +127,116 @@ export default function page({params}: { params: { id: number } }) {
             label: 'Характеристики',
             key: '2',
             children: <div className={'product_text'}> {resData.attributes.category_type_id === 0 &&
-                <CharacteristicsCpu id={resData.attributes.characteristic_id}/>
+                <CharacteristicsCpu
+                    id={resData.attributes.characteristic_id}
+                    imgUrl={resData.attributes.Image.data.attributes.url}
+                    price={resData.attributes.Price}
+                />
             }
-            {resData.attributes.category_type_id === 1 &&
-                <CharacteristicsGpu id={resData.attributes.characteristic_id}/>
-            }
-            {resData.attributes.category_type_id === 2 &&
-                <CharacteristicsRam id={resData.attributes.characteristic_id}/>
-            }
-            {resData.attributes.category_type_id === 3 &&
-                <CharacteristicMotherboard id={resData.attributes.characteristic_id}/>
-            }
-            {resData.attributes.category_type_id === 4 &&
-                <CharacteristicCoolingCpu id={resData.attributes.characteristic_id}/>
-            }
-            {resData.attributes.category_type_id === 5 &&
-                <CharacteristicsSsd id={resData.attributes.characteristic_id}/>
-            }
-            {resData.attributes.category_type_id === 6 &&
-                <CharacteristicsPowerUnit id={resData.attributes.characteristic_id}/>
-            }
-            {resData.attributes.category_type_id === 7 &&
-                <СharacteristicsHardDrive id={resData.attributes.characteristic_id}/>
-            }
-            {resData.attributes.category_type_id === 8 &&
-                <СharacteristicsComputerCase id={resData.attributes.characteristic_id}/>
-            }
+                {resData.attributes.category_type_id === 1 &&
+                    <CharacteristicsGpu
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
+                {resData.attributes.category_type_id === 2 &&
+                    <CharacteristicsRam
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
+                {resData.attributes.category_type_id === 3 &&
+                    <CharacteristicMotherboard
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
+                {resData.attributes.category_type_id === 4 &&
+                    <CharacteristicCoolingCpu
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
+                {resData.attributes.category_type_id === 5 &&
+                    <CharacteristicsSsd
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
+                {resData.attributes.category_type_id === 6 &&
+                    <CharacteristicsPowerUnit
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
+                {resData.attributes.category_type_id === 7 &&
+                    <СharacteristicsHardDrive
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
+                {resData.attributes.category_type_id === 8 &&
+                    <СharacteristicsComputerCase
+                        id={resData.attributes.characteristic_id}
+                        imgUrl={resData.attributes.Image.data.attributes.url}
+                        price={resData.attributes.Price}
+                    />
+                }
             </div>,
             disabled: false,
         },
     ]
 
-    return <>
+    // const order = () => {
+    //     try {
+    //         fetch(`http://192.168.1.90:1337/graphql`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 query: `mutation{
+    //                           createOrderList(data: {
+    //                           users_permissions_user: ${store.getState().persistedReducer.value.id},
+    //                           product: ${path.split('/').slice(-1)},
+    //                           quantity: 1}){
+    //                             data{
+    //                                 attributes{
+    //                                 users_permissions_user {
+    //                                   data{
+    //                                     id
+    //                                   }
+    //                                 }
+    //                                 product{
+    //                                   data{
+    //                                     id
+    //                                   }
+    //                                 }
+    //                                 quantity
+    //                               }
+    //                             }
+    //                           }
+    //                         }`,
+    //                 variables: {}
+    //             })
+    //         })
+    //     } catch (e) {
+    //         console.log(e)
+    //     }
+    // }
+
+    const order = () => {
+    }
+
+
+    return <div className={'main-content'}>
         {response !== null ? <div className={'product_container'}>
                 <span className={'product_main'}>
                     {resData.attributes.Image.data !== null ?
@@ -176,7 +257,18 @@ export default function page({params}: { params: { id: number } }) {
                         <h1 className={'name'}>{resData.attributes.Name}</h1>
                         <div className={'buy_field'}>
                             <h3 style={{color: 'red'}}> цена: {resData.attributes.Price}</h3>
-                            <Button type={'primary'} style={{marginLeft: 10}}>купить</Button>
+                            <Button
+                                type={'primary'}
+                                style={{marginLeft: 10}}
+                                onClick={(e) => store.dispatch(addProduct({
+                                    Name: resData.attributes.Name,
+                                    Image: resData.attributes.Image.data.attributes.url,
+                                    Description: resData?.attributes.Description,
+                                    Price: resData?.attributes.Price,
+                                    quantity: 1
+                                }))}>
+                                Добавить в корзину
+                            </Button>
                         </div>
                     </span>
                 </span>
@@ -187,5 +279,5 @@ export default function page({params}: { params: { id: number } }) {
             />
 
         </div> : <Empty/>}
-    </>
+    </div>
 }

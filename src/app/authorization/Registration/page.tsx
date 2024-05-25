@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
 import {store} from "@/redux/store";
+import {logIn} from "@/redux/features/auth-slice";
 
 const { Title } = Typography;
 
@@ -25,50 +26,48 @@ const userInput = () => {
     }
 }
 
-const authPost = async (username:string, login: string, email : string, password: string) => {
-    try {
-        const resData = await fetch(`${store.getState().api.value.url}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                query: `mutation {
+export default function Reg(){
+    const [form] = Form.useForm();
+
+    let username = userInput()
+    let email = userInput()
+    let password = userInput()
+
+    const authPost = async (username:string, email : string, password: string) => {
+        try {
+            const resData = await fetch(`${store.getState().api.value.url}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: `mutation {
                           register(input: { 
                           username: "${username}",
                           email: "${email}", 
                           password: "${password}" }) {
                             jwt
                             user {
+                              id
                               username
                               email
                             }
                           }
                         }`,
-                variables: {}
+                    variables: {}
+                })
             })
-        })
-            .then(response => response.json())
-            .then(data => data.data.register)
+                .then(response => response.json())
+                .then(data => data.data.register)
 
-        localStorage.setItem('jwt', resData.jwt)
-        localStorage.setItem('username', resData.user.username)
-        localStorage.setItem('email', resData.user.email)
+            store.dispatch(logIn(resData))
 
-        location.replace('/')
-    }catch (e){
-        console.log(e)
+            location.replace('/')
+        }catch (e){
+            console.log(e)
+        }
     }
 
-}
-
-export default function Reg(){
-    const [form] = Form.useForm();
-
-    let username = userInput()
-    let login = userInput()
-    let email = userInput()
-    let password = userInput()
 
     return<div className={'main_authorization'}>
         <Form layout="vertical">
@@ -79,14 +78,6 @@ export default function Reg(){
                 rules={[{required: true, message: 'Пожалуйста введите своё имя!'}]}
             >
                 <Input {...username.bind}/>
-            </Form.Item>
-
-            <Form.Item
-                label={'Логин'}
-                name={'login'}
-                rules={[{required: true, message: 'Пожалуйста введите свой логин!'}]}
-            >
-                <Input {...login.bind}/>
             </Form.Item>
 
             <Form.Item
@@ -118,7 +109,7 @@ export default function Reg(){
                     type="primary" htmlType="submit" style={{width: '100%'}}
                     onClick={(e) => {
                         e.preventDefault()
-                        authPost(username.value(), login.value(), email.value(), password.value())
+                        authPost(username.value(), email.value(), password.value())
                     }}>
                     Войти
                 </Button>
